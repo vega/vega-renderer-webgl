@@ -1,9 +1,5 @@
-function devicePixelRatio() {
-  return typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1;
-}
-const pixelRatio = devicePixelRatio();
-
 export default function (canvas, width, height, origin, scaleFactor, opt) {
+  const pixelRatio = window.devicePixelRatio || 1;
   const inDOM = typeof HTMLElement !== 'undefined' && canvas instanceof HTMLElement && canvas.parentNode != null,
     ratio = inDOM ? pixelRatio : scaleFactor;
 

@@ -1,0 +1,56 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "An animated scatterplot with N points",
+  "width": 500,
+  "height": 300,
+  "autosize": "none",
+  "signals": [
+    {
+      "name": "t",
+      "value": 0,
+      "on": [
+        {
+          "events": {"type": "timer", "throttle": 33},
+          "update": "(now() / 1000)"
+        }
+      ]
+    },
+    {
+      "name": "N",
+      "value": 1000,
+      "bind": {"input": "range", "min": 10, "max": 100000}
+    }
+  ],
+  "data": [
+    {
+      "name": "points",
+      "transform": [
+        {"type": "sequence", "start": 0, "stop": {"signal": "N"}},
+        {"type": "formula", "expr": "random() * 3.1415926", "as": "u"},
+        {"type": "formula", "expr": "random() * 3.1415926", "as": "v"}
+      ]
+    }
+  ],
+  "marks": [
+    {
+      "type": "symbol",
+      "from": {"data": "points"},
+      "clip": true,
+      "encode": {
+        "enter": {
+          "fillOpacity": {"value": 0.1},
+          "fill": {"value": "#1f77b4"},
+          "size": {"value": 10}
+        },
+        "update": {
+          "x": {
+            "signal": "(cos(datum.v + t * 2.1) + sin(datum.u + t)) / 2 * 250 + 250"
+          },
+          "y": {
+            "signal": "(cos(datum.v + t) + sin(datum.u + t * 3.3)) / 2 * 150 + 150"
+          }
+        }
+      }
+    }
+  ]
+}

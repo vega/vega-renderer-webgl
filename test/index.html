@@ -4,7 +4,6 @@
         <title>Vega Renderer Test</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script src="../build/vega-webgl-renderer.js"></script>
         <style>
             body { margin: 10px; font: 14px Helvetica Neue; position: relative; }
             #header {
@@ -26,6 +25,96 @@
           </style>
     </head>
     <body>
+        <div id="header">
+            Vega Specification:
+            <select id="specs">
+              <option value="">-----</option>
+            </select> &nbsp;
+            Renderer:
+            <select id="render">
+              <option value="svg">svg</option>
+              <option value="canvas" selected>canvas</option>
+              <option value="webgl">webgl</option>
+            </select> &nbsp;
+          </div>
+          <div id="view"></div>
+          <div id="external"></div>
+
         <script src="https://cdn.jsdelivr.net/npm/vega@5.19.1/build/vega.min.js"></script>
+        <script type="module">
+            import webglr from "../build/vega-webgl-renderer.js";
+            let runtime, spec, view;
+
+            const options = {
+                container: "#view",
+                renderer: 'canvas',
+                logLevel: vega.Warn,
+                hover: true
+            }
+
+
+            vega.renderModule('webgl', webglr);
+
+            const select = document.querySelector('#specs');
+            select.addEventListener('change', function() {
+                load(select.options[select.selectedIndex].value);
+            });
+
+            const render = document.querySelector('#render');
+            render.addEventListener('change', function() {
+                options.renderer = render.options[render.selectedIndex].value;
+                if (view) view.renderer(options.renderer).runAsync();
+            });
+
+            async function init() {
+                try {
+                    const data = await fetch('specs-valid.json').then(r => r.json());
+
+                    // load manifest of test specifications
+                    data.forEach(function(name) {
+                    const opt = document.createElement('option');
+                    opt.setAttribute('value', name);
+                    opt.textContent = name;
+                    select.appendChild(opt);
+                    });
+
+                    // if query string is present, try to load spec
+                    if (location.search) load(location.search.slice(1));
+                } catch (err) {
+                    console.error(err, err.stack);
+                }
+                }
+
+                async function load(name) {
+                if (!name) {
+                    if (view) view.finalize().container().innerHTML = '';
+                    return;
+                }
+
+                // update select widget state
+                select.selectedIndex = 0;
+                for (let i=0, n=select.options.length; i<n; ++i) {
+                    if (select.options[i].value === name) {
+                    select.selectedIndex = i; break;
+                    }
+                }
+
+                // load vega spec, then visualize it
+                try {
+                    spec = await fetch(`specs-valid/${name}.vg.json`).then(r => r.json());
+                    console.log('LOAD', name);
+
+                    if (view) view.finalize(); // finalize existing view
+
+                    const t0 = Date.now();
+                    runtime = vega.parse(spec);
+                    view = await new vega.View(runtime, options).runAsync();
+                    console.log('INIT', name, Date.now() - t0);
+                } catch (err) {
+                    console.error(err, err.stack);
+                }
+            }
+            init();
+        </script>
     </body>
 </html>

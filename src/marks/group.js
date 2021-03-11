@@ -1,4 +1,4 @@
-import {visit} from 'vega-scenegraph';
+import {visit} from '../util/visit';
 
 function draw(gl, scene, bounds) {
   this._aspect = this._height / this._width;

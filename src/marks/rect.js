@@ -1,4 +1,4 @@
-import {color, RGBColor} from 'd3-color';
+import {color} from 'd3-color';
 
 function draw(gl, item) {
   if (!this._positions) {
