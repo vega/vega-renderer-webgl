@@ -23,4 +23,5 @@ jobs:
       - name: Install Node dependencies
         run: yarn --frozen-lockfile
 
+      - run: yarn lint
       - run: yarn build

@@ -8,7 +8,9 @@
   "license": "MIT",
   "scripts": {
     "build": "rollup -c",
-    "serve": "serve . -l 8080"
+    "serve": "serve . -l 8080",
+    "format": "prettier src --write",
+    "lint": "prettier src --check"
   },
   "dependencies": {
     "@babel/core": "^7.13.10",
@@ -23,5 +25,7 @@
     "vega-scenegraph": "^4.9.3",
     "vega-util": "^1.16.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "prettier": "^2.2.1"
+  }
 }
