@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "WebGL Renderer extension for Vega",
   "main": "src/index.js",
-  "repository": "https://github.com/lsh/vega-webgl-renderer.git",
+  "repository": "https://github.com/vega/vega-renderer-webgl.git",
   "author": "Lukas Hermann",
   "license": "MIT",
   "scripts": {
