@@ -13,19 +13,19 @@
     "lint": "prettier src --check"
   },
   "dependencies": {
-    "@babel/core": "^7.13.10",
-    "@babel/preset-env": "^7.13.10",
-    "@rollup/plugin-babel": "^5.3.0",
-    "@rollup/plugin-node-resolve": "^11.2.0",
     "d3-color": "^2.0.0",
-    "rollup": "^2.41.1",
-    "serve": "^11.3.2",
     "twgl.js": "^4.19.1",
     "vega-canvas": "^1.2.6",
     "vega-scenegraph": "^4.9.3",
     "vega-util": "^1.16.0"
   },
   "devDependencies": {
-    "prettier": "^2.2.1"
+    "@babel/core": "^7.13.10",
+    "@babel/preset-env": "^7.13.10",
+    "@rollup/plugin-babel": "^5.3.0",
+    "@rollup/plugin-node-resolve": "^11.2.0",
+    "prettier": "^2.2.1",
+    "rollup": "^2.41.1",
+    "serve": "^11.3.2"
   }
 }
