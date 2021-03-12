@@ -4,16 +4,7 @@ import marks from './marks/index';
 import {Bounds, Renderer, domClear} from 'vega-scenegraph';
 import {canvas} from 'vega-canvas';
 import {error, inherits} from 'vega-util';
-import {
-  addExtensionsToContext,
-  createProgramInfo,
-  createVertexArrayInfo,
-  createBufferInfoFromArrays,
-  resizeCanvasToDisplaySize,
-  setBuffersAndAttributes,
-  setUniforms,
-  drawBufferInfo
-} from 'twgl.js/dist/4.x/twgl-full.module.js';
+import {addExtensionsToContext, resizeCanvasToDisplaySize} from 'twgl.js/dist/4.x/twgl-full.module.js';
 
 export default function WebGLRenderer(loader) {
   Renderer.call(this, loader);
@@ -103,46 +94,12 @@ inherits(WebGLRenderer, Renderer, {
     if (gl) {
       addExtensionsToContext(gl);
 
-      const vs = /*glsl*/ `
-          attribute vec2 position;
-          attribute vec2 center;
-          attribute vec2 scale;
-          attribute vec4 color;
-          uniform vec2 resolution;
-          varying vec4 fill;
-  
-          void main() {
-            fill = color;
-            vec2 pos = position * scale;
-            pos += center;
-            pos /= resolution;
-            pos.y = 1.0-pos.y;
-            pos = pos*2.0-1.0;
-            gl_Position = vec4(pos, 0, 1);
-          }
-      `;
-
-      const fs = /*glsl*/ `
-          precision mediump float;
-          varying vec4 fill;
-          void main() {
-            gl_FragColor = vec4(fill.xyz, fill.w);
-          }
-      `;
-
-      const programInfo = createProgramInfo(gl, [vs, fs]);
-
-      this.programInfo = programInfo;
-      this.draw(gl, scene, vb);
-      const bufferInfo = createBufferInfoFromArrays(gl, this._buffer);
-      const vertexInfo = createVertexArrayInfo(gl, programInfo, bufferInfo);
-      const uniforms = {
+      this.uniforms = {
         resolution: [w, h]
       };
 
       resizeCanvasToDisplaySize(gl.canvas, 1);
       gl.viewport(0, 0, w, h);
-      // setup blending so that all the points aren't opaque
       gl.enable(gl.BLEND);
       gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
@@ -150,10 +107,7 @@ inherits(WebGLRenderer, Renderer, {
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-      gl.useProgram(programInfo.program);
-      setBuffersAndAttributes(gl, programInfo, vertexInfo);
-      setUniforms(programInfo, uniforms);
-      drawBufferInfo(gl, vertexInfo, gl.TRIANGLES, vertexInfo.numElements, 0, this._itemCount);
+      this.draw(gl, scene, vb);
     } else {
       error('Failed to construct WebGL instance.');
     }
