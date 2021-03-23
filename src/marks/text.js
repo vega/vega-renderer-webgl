@@ -1,4 +1,4 @@
-function draw(ctx, item) {
+function draw(gl, item) {
   return;
 }
 

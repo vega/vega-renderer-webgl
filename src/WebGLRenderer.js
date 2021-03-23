@@ -117,8 +117,6 @@ inherits(WebGLRenderer, Renderer, {
 
   draw(ctx, scene, bounds) {
     const mark = marks[scene.marktype];
-    //if (scene.clip) clip(ctx, scene);
     mark.draw.call(this, ctx, scene, bounds);
-    //if (scene.clip) ctx.restore();
   }
 });

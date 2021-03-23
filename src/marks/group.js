@@ -14,7 +14,5 @@ function draw(gl, scene, bounds) {
 
 export default {
   type: 'group',
-  tag: 'g',
-  nested: false,
   draw: draw
 };
