@@ -48,8 +48,8 @@ function draw(gl, item) {
     const dx = x2 ? x2 : x;
     const dy = y2 ? y2 : y;
     colors.push(col.r / 255, col.g / 255, col.b / 255, strokeOpacity ?? 1);
-    const ax = Math.abs(dx-x)
-    const ay = Math.abs(dy-y)
+    const ax = Math.abs(dx - x);
+    const ay = Math.abs(dy - y);
     const sw = strokeWidth ? strokeWidth : 1;
     scales.push(ax ? ax : sw, ay ? ay : sw);
   }
