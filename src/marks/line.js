@@ -11,11 +11,12 @@ const vs = `
     attribute vec2 position;
     attribute vec3 color;
     uniform vec2 resolution;
+    uniform vec2 origin;
     varying vec3 fill;
 
     void main() {
       fill = color;
-      vec2 pos = position;
+      vec2 pos = position + origin;
       pos /= resolution;
       pos.y = 1.0-pos.y;
       pos = pos*2.0-1.0;
@@ -60,5 +61,5 @@ function draw(gl, item) {
 
 export default {
   type: 'line',
-  draw: draw
+  draw: draw,
 };

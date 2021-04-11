@@ -28,6 +28,8 @@ inherits(WebGLRenderer, Renderer, {
       depth: false,
       antialias: true
     });
+    this._context.pixelRatio = 1;
+
     if (el && this._canvas) {
       domClear(el, 0).appendChild(this._canvas);
       this._canvas.setAttribute('class', 'marks');
@@ -47,8 +49,8 @@ inherits(WebGLRenderer, Renderer, {
       // external context needs to be scaled and positioned to origin
       const gl = this._options.externalContext;
       if (!gl) error('WebGLRenderer is missing a valid canvas or context.');
-      gl.scale(this._scale, this._scale);
-      gl.translate(this._origin[0], this._origin[1]);
+      //gl.scale(this._scale, this._scale);
+      //gl.translate(this._origin[0], this._origin[1]);
     }
 
     this._redraw = true;
@@ -87,7 +89,7 @@ inherits(WebGLRenderer, Renderer, {
       w = this._width,
       h = this._height,
       db = this._dirty,
-      vb = viewBounds(o, w, h);
+      vb = {};//viewBounds(o, w, h);
 
     const gl = this.context();
 
@@ -95,7 +97,8 @@ inherits(WebGLRenderer, Renderer, {
       addExtensionsToContext(gl);
 
       this.uniforms = {
-        resolution: [w, h]
+        resolution: [w, h],
+        origin: this._origin
       };
 
       resizeCanvasToDisplaySize(gl.canvas, 1);

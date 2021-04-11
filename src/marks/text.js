@@ -3,5 +3,5 @@ function draw(gl, item) {
 }
 
 export default {
-  draw: draw
+  draw: draw,
 };

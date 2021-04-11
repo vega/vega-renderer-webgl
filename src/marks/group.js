@@ -14,5 +14,5 @@ function draw(gl, scene, bounds) {
 
 export default {
   type: 'group',
-  draw: draw
+  draw: draw,
 };

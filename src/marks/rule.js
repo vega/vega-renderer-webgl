@@ -14,11 +14,13 @@ const vs = `
     attribute vec2 scale;
     attribute vec4 color;
     uniform vec2 resolution;
-    varying vec4 fill;
+    uniform vec2 origin;
+    varying vec4 stroke;
 
     void main() {
-      fill = color;
+      stroke = color;
       vec2 pos = position * scale;
+      pos += origin;
       pos += center;
       pos /= resolution;
       pos.y = 1.0-pos.y;
@@ -29,9 +31,9 @@ const vs = `
 
 const fs = `
     precision mediump float;
-    varying vec4 fill;
+    varying vec4 stroke;
     void main() {
-      gl_FragColor = vec4(fill.xyz, fill.w);
+      gl_FragColor = vec4(stroke.xyz, stroke.w);
     }
 `;
 
@@ -70,5 +72,5 @@ function draw(gl, item) {
 
 export default {
   type: 'rule',
-  draw: draw
+  draw: draw,
 };

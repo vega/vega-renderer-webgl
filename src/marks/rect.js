@@ -14,11 +14,13 @@ const vs = `
     attribute vec2 scale;
     attribute vec4 color;
     uniform vec2 resolution;
+    uniform vec2 origin;
     varying vec4 fill;
 
     void main() {
       fill = color;
       vec2 pos = position * scale;
+      pos += origin;
       pos += center;
       pos /= resolution;
       pos.y = 1.0-pos.y;
@@ -65,5 +67,5 @@ function draw(gl, item) {
 
 export default {
   type: 'rect',
-  draw: draw
+  draw: draw,
 };

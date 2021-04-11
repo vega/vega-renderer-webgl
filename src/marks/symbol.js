@@ -20,6 +20,7 @@ const vs = `
       fill = color;
       vec2 pos = position * scale;
       pos += center;
+      pos += origin;
       pos /= resolution;
       pos.y = 1.0-pos.y;
       pos = pos*2.0-1.0;
@@ -77,5 +78,5 @@ function draw(gl, item) {
 
 export default {
   type: 'symbol',
-  draw: draw
+  draw: draw,
 };
