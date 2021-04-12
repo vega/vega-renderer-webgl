@@ -52,7 +52,7 @@ function draw(gl, item) {
     color: {data: colors, numComponents: 3}
   };
 
-  setUniforms(programInfo, this.uniforms);
+  setUniforms(programInfo, this._uniforms);
   const bufferInfo = createBufferInfoFromArrays(gl, buffer);
   bufferInfo.numElements = itemCount;
   setBuffersAndAttributes(gl, programInfo, bufferInfo);

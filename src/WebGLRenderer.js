@@ -96,7 +96,7 @@ inherits(WebGLRenderer, Renderer, {
     if (gl) {
       addExtensionsToContext(gl);
 
-      this.uniforms = {
+      this._uniforms = {
         resolution: [w, h],
         origin: this._origin
       };
@@ -104,6 +104,7 @@ inherits(WebGLRenderer, Renderer, {
       resizeCanvasToDisplaySize(gl.canvas, 1);
       gl.viewport(0, 0, w, h);
       gl.enable(gl.BLEND);
+      gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
       gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
       gl.clearColor(1, 1, 1, 1);

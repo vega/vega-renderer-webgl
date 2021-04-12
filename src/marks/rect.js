@@ -58,7 +58,7 @@ function draw(gl, item) {
     scale: {data: scales, numComponents: 2, divisor: 1},
     color: {data: colors, numComponents: 4, divisor: 1}
   };
-  setUniforms(programInfo, this.uniforms);
+  setUniforms(programInfo, this._uniforms);
   const bufferInfo = createBufferInfoFromArrays(gl, buffer);
   const vertexInfo = createVertexArrayInfo(gl, programInfo, bufferInfo);
   setBuffersAndAttributes(gl, programInfo, vertexInfo);
