@@ -12,11 +12,9 @@ const vs = `
 precision mediump float;
 attribute vec2 position;
 uniform vec2 resolution;
-uniform vec2 origin;
 
 void main() {
   vec2 pos = position * resolution;
-  pos -= origin;
   pos /= resolution;
   pos = pos*2.0-1.0;
   gl_Position = vec4(pos, 0, 1);
@@ -45,13 +43,12 @@ function draw(gl, item) {
   const ctx = canvas.getContext('2d');
 
   for (let i = 0; i < itemCount; i++) {
-    console.log(item.items[i])
     const {x, y, text, fill, font, fontSize, align, baseline} = item.items[i];
       ctx.font = `${fontSize}px ${font}`;
       ctx.fillStyle = fill;
       ctx.textAlign = align;
       ctx.textBaseAlign = baseline;
-      ctx.fillText(text, x < 0 ? x + offsetx : x, y < 0 ? y + offsety : y);
+      ctx.fillText(text, x + offsetx, y + offsety);
   }
 
   const programInfo = createProgramInfo(gl, [vs, fs]);

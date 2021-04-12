@@ -14,6 +14,7 @@ const vs = `
     attribute vec2 scale;
     attribute vec4 color;
     uniform vec2 resolution;
+    uniform vec2 origin;
     varying vec4 fill;
 
     void main() {
