@@ -89,13 +89,12 @@ inherits(WebGLRenderer, Renderer, {
       w = this._width,
       h = this._height,
       db = this._dirty,
-      vb = {};//viewBounds(o, w, h);
+      vb = {}; //viewBounds(o, w, h);
 
     const gl = this.context();
 
     if (gl) {
       addExtensionsToContext(gl);
-
 
       resizeCanvasToDisplaySize(gl.canvas, window.devicePixelRatio || 1);
       gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);

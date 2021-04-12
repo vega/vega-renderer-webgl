@@ -41,30 +41,30 @@ function draw(gl, item) {
   const positions = [0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0];
   const itemCount = item.items.length;
   const [offsetx, offsety] = this._origin;
-  const { dpi } = this._uniforms;
+  const {dpi} = this._uniforms;
   const canvas = new OffscreenCanvas(gl.canvas.width, gl.canvas.height);
   const ctx = canvas.getContext('2d');
 
   for (let i = 0; i < itemCount; i++) {
     const {x, y, text, fill, font, fontSize, align, baseline} = item.items[i];
-      ctx.font = `${fontSize * dpi}px ${font}`;
-      ctx.fillStyle = fill;
-      ctx.textAlign = align;
-      ctx.textBaseAlign = baseline;
-      ctx.fillText(text, (x + offsetx) * dpi, (y + offsety) * dpi);
+    ctx.font = `${fontSize * dpi}px ${font}`;
+    ctx.fillStyle = fill;
+    ctx.textAlign = align;
+    ctx.textBaseAlign = baseline;
+    ctx.fillText(text, (x + offsetx) * dpi, (y + offsety) * dpi);
   }
 
   const programInfo = createProgramInfo(gl, [vs, fs]);
   gl.useProgram(programInfo.program);
   const buffer = {
-    position: {data: positions, divisor: 0},
+    position: {data: positions, divisor: 0}
   };
-  setUniforms(programInfo, {...this._uniforms, t0: createTexture(gl,{src: canvas})});
+  setUniforms(programInfo, {...this._uniforms, t0: createTexture(gl, {src: canvas})});
   const bufferInfo = createBufferInfoFromArrays(gl, buffer);
   setBuffersAndAttributes(gl, programInfo, bufferInfo);
   drawBufferInfo(gl, bufferInfo, gl.TRIANGLE);
 }
 
 export default {
-  draw: draw,
+  draw: draw
 };
