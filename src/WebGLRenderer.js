@@ -96,13 +96,14 @@ inherits(WebGLRenderer, Renderer, {
     if (gl) {
       addExtensionsToContext(gl);
 
+
+      resizeCanvasToDisplaySize(gl.canvas, window.devicePixelRatio || 1);
+      gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
       this._uniforms = {
         resolution: [w, h],
-        origin: this._origin
+        origin: this._origin,
+        dpi: window.devicePixelRatio || 1
       };
-
-      resizeCanvasToDisplaySize(gl.canvas, 1);
-      gl.viewport(0, 0, w, h);
       gl.enable(gl.BLEND);
       gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
       gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);

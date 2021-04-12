@@ -12,6 +12,8 @@ const vs = `
 precision mediump float;
 attribute vec2 position;
 uniform vec2 resolution;
+uniform vec2 origin;
+uniform float dpi;
 
 void main() {
   vec2 pos = position * resolution;
@@ -25,9 +27,10 @@ const fs = `
 precision mediump float;
 uniform sampler2D t0;
 uniform vec2 resolution;
+uniform float dpi;
 
 void main() {
-  vec2 uv = gl_FragCoord.xy/resolution;
+  vec2 uv = gl_FragCoord.xy/resolution/dpi;
   uv.y = 1.0-uv.y;
   vec4 col = texture2D(t0, uv);
   gl_FragColor = vec4(col);
@@ -38,17 +41,17 @@ function draw(gl, item) {
   const positions = [0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0];
   const itemCount = item.items.length;
   const [offsetx, offsety] = this._origin;
-  const dpi = window.devicePixelRatio || 1;
-  const canvas = new OffscreenCanvas(this._width, this._height);
+  const { dpi } = this._uniforms;
+  const canvas = new OffscreenCanvas(gl.canvas.width, gl.canvas.height);
   const ctx = canvas.getContext('2d');
 
   for (let i = 0; i < itemCount; i++) {
     const {x, y, text, fill, font, fontSize, align, baseline} = item.items[i];
-      ctx.font = `${fontSize}px ${font}`;
+      ctx.font = `${fontSize * dpi}px ${font}`;
       ctx.fillStyle = fill;
       ctx.textAlign = align;
       ctx.textBaseAlign = baseline;
-      ctx.fillText(text, x + offsetx, y + offsety);
+      ctx.fillText(text, (x + offsetx) * dpi, (y + offsety) * dpi);
   }
 
   const programInfo = createProgramInfo(gl, [vs, fs]);
