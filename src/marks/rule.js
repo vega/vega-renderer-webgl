@@ -45,13 +45,15 @@ function draw(gl, item) {
   const colors = [];
   for (let i = 0; i < itemCount; i++) {
     const {x, y, x2, y2, stroke, strokeOpacity, strokeWidth} = item.items[i];
-    centers.push(x, y);
+    const x1 = x || 0;
+    const y1 = y || 0;
+    const dx = x2 != null ? x2 : x1;
+    const dy = y2 != null ? y2 : y1;
+    centers.push(Math.min(x1, dx), Math.min(y1, dy));
     const col = color(stroke);
-    const dx = x2 ? x2 : x;
-    const dy = y2 ? y2 : y;
     colors.push(col.r / 255, col.g / 255, col.b / 255, strokeOpacity ?? 1);
-    const ax = Math.abs(dx - x);
-    const ay = Math.abs(dy - y);
+    const ax = Math.abs(dx - x1);
+    const ay = Math.abs(dy - y1);
     const sw = strokeWidth ? strokeWidth : 1;
     scales.push(ax ? ax : sw, ay ? ay : sw);
   }
@@ -72,5 +74,5 @@ function draw(gl, item) {
 
 export default {
   type: 'rule',
-  draw: draw,
+  draw: draw
 };
