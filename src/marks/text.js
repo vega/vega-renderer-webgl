@@ -40,7 +40,7 @@ void main() {
 function draw(gl, item, tfx) {
     const positions = [0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0];
     const itemCount = item.items.length;
-    const [offsetx, offsety] = this._origin;
+    const [offsetx, offsety] = tfx;
     const {dpi} = this._uniforms;
     const canvas = new OffscreenCanvas(gl.canvas.width, gl.canvas.height);
     const ctx = canvas.getContext('2d');
@@ -59,7 +59,10 @@ function draw(gl, item, tfx) {
     const buffer = {
         position: {data: positions, divisor: 0}
     };
-    setUniforms(programInfo, {...this._uniforms, t0: createTexture(gl, {src: canvas}), origin: tfx});
+    setUniforms(programInfo, {
+        ...this._uniforms,
+        t0: createTexture(gl, {src: canvas})
+    });
     const bufferInfo = createBufferInfoFromArrays(gl, buffer);
     setBuffersAndAttributes(gl, programInfo, bufferInfo);
     drawBufferInfo(gl, bufferInfo, gl.TRIANGLE);
