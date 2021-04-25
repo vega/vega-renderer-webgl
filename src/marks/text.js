@@ -44,14 +44,25 @@ function draw(gl, item, tfx) {
     const {dpi} = this._uniforms;
     const canvas = new OffscreenCanvas(gl.canvas.width, gl.canvas.height);
     const ctx = canvas.getContext('2d');
+    const DegToRad = 0.01745329251;
 
     for (let i = 0; i < itemCount; i++) {
-        const {x, y, text, fill, font, fontSize, align, baseline} = item.items[i];
-        ctx.font = `${fontSize * dpi}px ${font}`;
+        const {x: px, y: py, text, fill, font, fontSize, fontWeight, align, baseline, angle} = item.items[i];
+        let [x, y] = [(px + offsetx) * dpi, (py + offsety) * dpi];
+        ctx.font = `${fontWeight ? fontWeight : ''} ${fontSize * dpi}px ${font}`;
         ctx.fillStyle = fill;
         ctx.textAlign = align;
         ctx.textBaseAlign = baseline;
-        ctx.fillText(text, (x + offsetx) * dpi, (y + offsety) * dpi);
+        if (angle) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(angle * DegToRad);
+            x = y = 0;
+            ctx.fillText(text, x, y);
+            ctx.restore();
+        } else {
+            ctx.fillText(text, x, y);
+        }
     }
 
     const programInfo = createProgramInfo(gl, [vs, fs]);
