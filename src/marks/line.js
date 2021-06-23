@@ -35,15 +35,15 @@ void main() {
 }
 `;
 
-function draw(gl, item, tfx) {
+function draw(gl, scene, tfx) {
   const positions = [];
   const normals = [];
   // const colors = [];
   const strokewidths = [];
 
-  for (let i = 0; i < item.items.length - 1; i++) {
-    const {x, y, stroke, strokeWidth} = item.items[i];
-    const {x: x2, y: y2} = item.items[i + 1];
+  for (let i = 0; i < scene.items.length - 1; i++) {
+    const {x, y, stroke, strokeWidth} = scene.items[i];
+    const {x: x2, y: y2} = scene.items[i + 1];
     const [dx, dy] = [x2 - x, y2 - y];
     let [nx, ny] = [-dy, dx];
     const vlen = Math.sqrt(nx ** 2 + ny ** 2);
@@ -54,7 +54,7 @@ function draw(gl, item, tfx) {
     const sw = strokeWidth || 1;
     strokewidths.push(sw, sw, sw, sw, sw, sw);
   }
-  const col = color(item.items[0].stroke);
+  const col = color(scene.items[0].stroke);
 
   const programInfo = createProgramInfo(gl, [vs, fs]);
   gl.useProgram(programInfo.program);

@@ -1,5 +1,6 @@
 import {font, lineHeight, textLines, offset, textValue} from '../util/text';
 import {blend, fill, stroke} from '../util/canvas';
+import {HalfPi, DegToRad} from '../util/constants';
 import {
   createProgramInfo,
   setUniforms,

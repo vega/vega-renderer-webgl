@@ -37,14 +37,14 @@ const fs = `
     }
 `;
 
-function draw(gl, item, tfx) {
+function draw(gl, scene, tfx) {
   const positions = [0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0];
-  const itemCount = item.items.length;
+  const itemCount = scene.items.length;
   const centers = [];
   const scales = [];
   const colors = [];
   for (let i = 0; i < itemCount; i++) {
-    const {x, y, width, height, fill, fillOpacity} = item.items[i];
+    const {x, y, width, height, fill, fillOpacity} = scene.items[i];
     centers.push(x, y);
     const col = color(fill);
     colors.push(col.r / 255, col.g / 255, col.b / 255, fillOpacity ?? 1);

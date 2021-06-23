@@ -37,7 +37,7 @@ const fs = `
     }
 `;
 
-function draw(gl, item, tfx) {
+function draw(gl, scene, tfx) {
   const segments = 32;
   const angles = Array.from({length: segments}, (_, i) => (!i ? 0 : ((Math.PI * 2.0) / segments) * i));
   const positions = [];
@@ -50,12 +50,12 @@ function draw(gl, item, tfx) {
     const y2 = Math.sin(ang2);
     positions.push(x1, y1, 0, 0, 0, 0, x2, y2, 0);
   }
-  const itemCount = item.items.length;
+  const itemCount = scene.items.length;
   const centers = [];
   const scales = [];
   const colors = [];
   for (let i = 0; i < itemCount; i++) {
-    const {x, y, size, fill, fillOpacity} = item.items[i];
+    const {x, y, size, fill, fillOpacity} = scene.items[i];
     centers.push(x, y);
     const col = color(fill);
     colors.push(col.r / 255, col.g / 255, col.b / 255, fillOpacity);
