@@ -1,5 +1,5 @@
-import {color} from 'd3-color';
-import {offset} from '../util/text';
+import {font, lineHeight, textLines, offset, textValue} from '../util/text';
+import {blend, fill, stroke} from '../util/canvas';
 import {
   createProgramInfo,
   setUniforms,
@@ -38,33 +38,76 @@ void main() {
 }
 `;
 
-function draw(gl, item, tfx) {
-  const positions = [0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0];
-  const itemCount = item.items.length;
-  const [offsetx, offsety] = tfx;
-  const {dpi} = this._uniforms;
-  const canvas = new OffscreenCanvas(gl.canvas.width, gl.canvas.height);
-  const ctx = canvas.getContext('2d');
-  const DegToRad = 0.01745329251;
+function anchorPoint(item) {
+  let x = item.x || 0,
+    y = item.y || 0,
+    r = item.radius || 0,
+    t;
+  if (r) {
+    t = (item.theta || 0) - HalfPi;
+    x += r * Math.cos(t);
+    y += r * Math.sin(t);
+  }
+  return {x1: x, y1: y};
+}
 
-  for (let i = 0; i < itemCount; i++) {
-    const it = item.items[i];
-    const {x: px, y: py, text, fill, font, fontSize, fontWeight, align, angle, dx, dy} = it;
-    let [x, y] = [(px + offsetx) * dpi, (py + offsety) * dpi];
-    const off = offset(it);
-    ctx.font = `${fontWeight ? fontWeight : ''} ${fontSize * dpi}px ${font}`;
-    ctx.fillStyle = fill;
-    ctx.textAlign = align;
-    if (angle) {
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.rotate(angle * DegToRad);
-      x = y = 0;
-      ctx.restore();
+function draw(gl, scene, tfx) {
+  const positions = [0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0];
+  const [offsetx, offsety] = tfx;
+  const dpi = this._uniforms.dpi;
+  const [w, h] = this._uniforms.resolution;
+  const canvas = new OffscreenCanvas(w * dpi, h * dpi);
+  const octx = canvas.getContext('2d');
+  for (let i = 0; i < scene.items.length; i++) {
+    const item = scene.items[i];
+    let opacity = item.opacity == null ? 1 : item.opacity,
+      p,
+      x,
+      y,
+      j,
+      lh,
+      tl,
+      str;
+    octx.font = font(item);
+    octx.textAlign = item.align || 'left';
+
+    p = anchorPoint(item);
+    x = (p.x1 + offsetx) * dpi;
+    y = (p.y1 + offsety) * dpi;
+
+    if (item.angle) {
+      octx.save();
+      octx.translate(x, y);
+      octx.rotate(item.angle * DegToRad);
+      x = y = 0; // reset x, y
     }
-    x += dx || 0;
-    y += (dy || 0) + off;
-    ctx.fillText(text, x, y);
+    x += item.dx * dpi || 0;
+    y += (item.dy * dpi || 0) + offset(item);
+    tl = textLines(item);
+    blend(octx, item);
+    if (Array.isArray(tl)) {
+      lh = lineHeight(item);
+      for (j = 0; j < tl.length; ++j) {
+        str = textValue(item, tl[j]);
+        if (item.fill && fill(octx, item, opacity)) {
+          octx.fillText(str, x, y);
+        }
+        if (item.stroke && stroke(octx, item, opacity)) {
+          octx.strokeText(str, x, y);
+        }
+        y += lh;
+      }
+    } else {
+      str = textValue(item, tl);
+      if (item.fill && fill(octx, item, opacity)) {
+        octx.fillText(str, x, y);
+      }
+      if (item.stroke && stroke(octx, item, opacity)) {
+        octx.strokeText(str, x, y);
+      }
+    }
+
+    if (item.angle) octx.restore();
   }
 
   const programInfo = createProgramInfo(gl, [vs, fs]);
